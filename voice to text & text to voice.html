@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Speech to Text</title>
+    <style type="text/css">
+        body {
+            background-color: darkmagenta;
+            background-image: url("https://c0.wallpaperflare.com/preview/657/277/141/blue-water-blur-close-up-dark.jpg");
+            display: flex;
+            background-size: cover;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .speaker {
+            background-color: beige;
+            box-shadow: 10px 12px 20px red;
+            width: 400px;
+            padding: 50px;
+            border-radius: 30px;
+            text-align: center;
+        }
+        button {
+            background-color: blue;
+            border-radius: 30px;
+            padding: 15px 30px;
+            font-size: 18px;
+            color: white;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        p {
+            color: crimson;
+            font-size: 20px;
+            font-weight: 200;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            font-size: 24px;
+            font-style: italic;
+            font-weight: 300;
+            border: 1px solid rgb(0, 170, 255);
+            border-radius: 5px;
+            padding: 5px;
+            resize: none;
+        }
+
+        .output {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="speaker">
+        <p>TEXT HERE</p>
+        <textarea id="textArea"></textarea>
+        <div>
+            <button onclick="speakText()">Text to Speak</button>
+            <button onclick="runSpeechRecog()">Speak to Text</button>
+        </div>
+        <div id="output" class="output hide"></div>
+    </div>
+
+    <script>
+        function speakText() {
+            var text = document.getElementById("textArea").value;
+            var output = document.getElementById("output");
+
+            output.innerHTML = "Loading text...";
+            var utterance = new SpeechSynthesisUtterance(text);
+            speechSynthesis.speak(utterance);
+        }
+
+        function runSpeechRecog() {
+            var output = document.getElementById("output");
+            var action = document.getElementById("action");
+
+            if ("webkitSpeechRecognition" in window) {
+                var recognition = new webkitSpeechRecognition();
+
+                recognition.onstart = function() {
+                    output.innerHTML = "Listening...";
+                };
+
+                recognition.onresult = function(e) {
+                    var transcript = e.results[0][0].transcript;
+                    output.innerHTML = transcript;
+                    output.classList.remove("hide");
+                };
+
+                recognition.start();
+            } else {
+                output.innerHTML = "Speech recognition not supported in this browser.";
+            }
+        }
+    </script>
+</body>
+</html>
